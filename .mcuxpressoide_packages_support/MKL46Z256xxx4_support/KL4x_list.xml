@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chips chipVendor="NXP" family="KL4x">
+   <chip name="MKL46Z256xxx4" flash=""/>
+</chips>

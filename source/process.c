@@ -5,7 +5,7 @@ struct process_state {
 	unsigned int *sp;
 	unsigned int *orig_sp;
 	int n;
-	struct process_state *next;
+	struct process_state *next;	int is_realtime;	realtime* start; //when the process can begin	realtime* deadline; //when it must be done by
 };
 
 /* the currently running process. current_process must be NULL if no process is running,
@@ -98,4 +98,4 @@ int process_create (void (*f)(void), int n) {
 	
 	push_tail_process(proc);
 	return 0;
-}
+}int process_rt_create(void (*f)(void), int n, realtime_t *start, realtime_t *deadline){}
