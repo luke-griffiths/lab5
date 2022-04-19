@@ -1,4 +1,4 @@
-#include "3140_concur.h"
+#include "3140_concur.h"#include "realtime.h"
 
 // The process_t structure definition
 struct process_state {
@@ -83,19 +83,15 @@ void process_start (void) {
 }
 
 /* Create a new process */
-int process_create (void (*f)(void), int n) {
-	unsigned int *sp = process_stack_init(f, n);
-	if (!sp) return -1;
-	
-	process_t *proc = (process_t*) malloc(sizeof(process_t));
-	if (!proc) {
-		process_stack_free(sp, n);
-		return -1;
-	}
-	
-	proc->sp = proc->orig_sp = sp;
-	proc->n = n;
-	
-	push_tail_process(proc);
-	return 0;
-}int process_rt_create(void (*f)(void), int n, realtime_t *start, realtime_t *deadline){}
+int process_create (void (*f)(void), int n) {
+	unsigned int *sp = process_stack_init(f, n);
+	if (!sp) return -1;
+	process_t *proc = (process_t*) malloc(sizeof(process_t));
+	if (!proc) {
+		process_stack_free(sp, n);
+		return -1;
+	}
+	proc->sp = proc->orig_sp = sp;
+	proc->n = n;	proc->is_realtime = 0;	proc->start = NULL;	proc->deadline = NULL;
+	push_tail_process(proc);	return 0;
+}int process_rt_create(void (*f)(void), int n, realtime_t *start, realtime_t *deadline){	unsigned int *sp = process_stack_init(f, n);		if (!sp) return -1;		process_t *proc = (process_t*) malloc(sizeof(process_t));		if (!proc) {				process_stack_free(sp, n);				return -1;			}		proc->sp = proc->orig_sp = sp;		proc->n = n;		proc->is_realtime = 1;		proc->start = start;		int total_msec = (1000 * start->sec + start->msec) + (1000 * deadline->sec + deadline->msec);		deadline->sec = total_msec / 1000;		deadline->msec = total_msec % 1000;		proc->deadline = deadline;		return 0;}
