@@ -9,8 +9,8 @@
 
 
 /* Stack space for processes */
-#define NRT_STACK 20
-#define RT_STACK  20
+#define NRT_STACK 70
+#define RT_STACK  70
 
 
 
@@ -67,13 +67,11 @@ void pNRT2(void) {
  *-------------------*/
 
 void pRT1(void) {
-	int i;
-	for (i=0; i<3;i++){
 	LEDGreen_On();
+	mediumDelay();
 	mediumDelay();
 	LEDGreen_Toggle();
 	mediumDelay();
-	}
 }
 
 
@@ -85,7 +83,8 @@ int main(void) {
 	LED_Initialize();
 
     /* Create processes */
-    if (process_create(pNRT, NRT_STACK) < 0) { return -1; }
+    if (process_create(pNRT1, NRT_STACK) < 0) { return -1; }
+    if (process_create(pNRT2, NRT_STACK) < 0) { return -1; }
     if (process_rt_create(pRT1, RT_STACK, &t_pRT1, &t_1msec) < 0) { return -1; }
 
     /* Launch concurrent execution */
